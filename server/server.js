@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import rubberDuckRoutes from './routes/rubberDucks.js'; // Import the routes
-
+import chatRoutes from './routes/chat.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,7 +21,7 @@ app.use(cors({
 
 // Use the routes file for all `/ducks` routes
 app.use('/ducks', rubberDuckRoutes);
-
+app.use('/api/chat', chatRoutes); 
 // Start server
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
