@@ -3,7 +3,7 @@ import styles from "./Chat.module.css";
 
 export default function Chat() {
   const [input, setInput] = useState("");
-  const [answer, setAnswer] = useState("The answer will be here 💬");
+  const [answer, _setAnswer] = useState("The answer will be here 💬");
 
   function handleSend() {
   
