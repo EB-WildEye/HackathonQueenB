@@ -1,0 +1,55 @@
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #eee;
+}
+
+
+.answerArea {
+  flex: 1;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow-y: auto;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+
+.inputArea {
+  display: flex;
+  gap: 10px;
+}
+
+
+.inputTextArea {
+  flex: 1;
+  resize: none;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+button {
+  background-color: hotpink;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
