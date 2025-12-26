@@ -1,14 +1,10 @@
-import styles from './Home.module.css';
-import RandomDuck from '../../components/RandomDuck/RandomDuck.jsx';
+import Chat from "../../components/Chat/Chat.jsx";
 
-
-const Home = () => {
+export default function Home() {
   return (
-    <div className={styles.home}>
-      <h1 className={styles.headline}>Duck It</h1>
-      <RandomDuck />
+    <div>
+      <h2>Home</h2>
+      <Chat />
     </div>
   );
-};
-
-export default Home;
+}
