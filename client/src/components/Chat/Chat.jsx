@@ -1,22 +1,24 @@
 import { useState } from "react";
 import styles from "./Chat.module.css";
+import sendUserInput from "../../services/chatService";
 
 export default function Chat() {
   const [input, setInput] = useState("");
-  const [answer, _setAnswer] = useState("The answer will be here 💬");
+  const [answer, setAnswer] = useState("The answer will be here 💬");
 
-  function handleSend() {
+  async function handleSend() {
   
   //delete empyt spacse in the beginning and end; if empty, return
   if (!input.trim()) return; 
 
-  //Todo: send the input to BE, ask for an answer, upadte the answer
+  //Todo: insert the input question in another area, like in ChatGPT
   
-  //clear input area
-  setInput("");
+  const res = await sendUserInput(input);
+  setAnswer(res.data.response);
 
-  //TODO: delete later, this is for checking
-  alert("button works 💗")
+  //clear input area
+  setInput("");  
+
   }
 
   return (
