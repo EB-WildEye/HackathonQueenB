@@ -14,6 +14,8 @@ const openai = new OpenAI({
  */
 export const sendMessage = async (req, res) => {
   try {
+    console.log('inside sendMessage func');
+    console.log(req.body);
     const { message } = req.body;
 
     if (!message) {
