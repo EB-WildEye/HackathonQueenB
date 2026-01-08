@@ -12,12 +12,14 @@ dotenv.config();
 
 const app = express();
 
+// CORS must be configured before routes
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true
+}));
+
 app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images'))); // Serve static images
-
-app.use(cors({
-  origin: process.env.CLIENT_URL
-}));
 
 // Use the routes file for all `/ducks` routes
 app.use('/ducks', rubberDuckRoutes);
