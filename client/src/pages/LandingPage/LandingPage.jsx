@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router';
 
 // Landing Page for Big Sis - Main entry point with navigation to all features
 // Aesthetic: Warm, safe, nurturing with soft gradients and friendly illustrations
@@ -58,15 +59,15 @@ const BigSisLanding = () => {
 
       {/* Navigation */}
       <nav style={styles.nav}>
-        <div style={styles.logo}>
+        <Link to="/" style={styles.logo}>
           <span style={styles.logoIcon}>💜</span>
           <span style={styles.logoText}>Big Sis</span>
-        </div>
+        </Link>
         <div style={styles.navLinks}>
-          <a href="/" style={styles.navLinkActive}>בית</a>
-          <a href="/chat" style={styles.navLink}>Big Sis</a>
-          <a href="/content" style={styles.navLink}>תוכן</a>
-          <a href="/about" style={styles.navLink}>אודות</a>
+          <Link to="/" style={styles.navLinkActive}>בית</Link>
+          <Link to="/chat" style={styles.navLink}>Big Sis</Link>
+          <Link to="/content" style={styles.navLink}>תוכן</Link>
+          <Link to="/about" style={styles.navLink}>אודות</Link>
         </div>
         <div style={styles.navActions}>
           <button style={styles.langBtn}>🌐 עברית</button>
@@ -95,14 +96,14 @@ const BigSisLanding = () => {
           </p>
 
           <div style={styles.heroCta}>
-            <a href="/chat" style={styles.primaryBtn}>
+            <Link to="/chat" style={styles.primaryBtn}>
               <span>💬</span>
               <span>בואי נדבר</span>
-            </a>
-            <a href="/about" style={styles.secondaryBtn}>
+            </Link>
+            <Link to="/about" style={styles.secondaryBtn}>
               <span>מה זה Big Sis?</span>
               <span>→</span>
-            </a>
+            </Link>
           </div>
 
           <div style={styles.trustBadges}>
@@ -119,9 +120,9 @@ const BigSisLanding = () => {
         
         <div style={styles.featuresGrid}>
           {features.map((feature) => (
-            <a
+            <Link
               key={feature.id}
-              href={feature.link}
+              to={feature.link}
               style={{
                 ...styles.featureCard,
                 ...(feature.primary ? styles.primaryCard : {}),
@@ -148,7 +149,7 @@ const BigSisLanding = () => {
                   <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </section>
@@ -219,7 +220,7 @@ const BigSisLanding = () => {
           {testimonials.map((item, index) => (
             <div key={index} style={styles.testimonialCard}>
               <span style={styles.testimonialEmoji}>{item.emoji}</span>
-              <p style={styles.testimonialText}>"{item.text}"</p>
+              <p style={styles.testimonialText}>&ldquo;{item.text}&rdquo;</p>
             </div>
           ))}
         </div>
@@ -237,7 +238,7 @@ const BigSisLanding = () => {
           </div>
           <a href="tel:1201" style={styles.emergencyBtn}>
             <span>📞</span>
-            <span>ער"ן - 1201</span>
+            <span>ער&quot;ן - 1201</span>
           </a>
         </div>
       </section>
@@ -245,15 +246,15 @@ const BigSisLanding = () => {
       {/* Footer */}
       <footer style={styles.footer}>
         <div style={styles.footerContent}>
-          <div style={styles.footerLogo}>
+          <Link to="/" style={styles.footerLogo}>
             <span style={styles.logoIcon}>💜</span>
             <span style={styles.logoText}>Big Sis</span>
-          </div>
+          </Link>
           <div style={styles.footerLinks}>
-            <a href="/about" style={styles.footerLink}>אודות</a>
-            <a href="/privacy" style={styles.footerLink}>פרטיות</a>
-            <a href="/terms" style={styles.footerLink}>תנאי שימוש</a>
-            <a href="/contact" style={styles.footerLink}>צור קשר</a>
+            <Link to="/about" style={styles.footerLink}>אודות</Link>
+            <Link to="/privacy" style={styles.footerLink}>פרטיות</Link>
+            <Link to="/terms" style={styles.footerLink}>תנאי שימוש</Link>
+            <Link to="/contact" style={styles.footerLink}>צור קשר</Link>
           </div>
           <p style={styles.footerNote}>
             💜 נבנה באהבה כדי לעזור

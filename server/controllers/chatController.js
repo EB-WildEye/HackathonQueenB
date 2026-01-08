@@ -40,6 +40,8 @@ export const sendMessage = async (req, res) => {
     });
 
     const aiResponse = completion.choices[0].message.content;
+    
+    console.log('OpenAI response:', aiResponse);
 
     return res.status(200).json({
       response: aiResponse,
