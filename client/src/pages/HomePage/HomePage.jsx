@@ -1,15 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
-
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router';
+import sendUserInput from '../../services/chatService.js';
+import Chat from "../../components/Chat/Chat.jsx";
 // Warm, supportive chat interface for "Big Sis" - a safe space to talk
 // Aesthetic: Soft, nurturing, approachable with gentle gradients and rounded shapes
 
 const BigSisHome = () => {
+  const [messageId, setMessageId] = useState(2);
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'bigsis',
       text: "היי! 💜 אני כאן בשבילך. אפשר לדבר על כל מה שעל הלב - בלי שיפוטיות, בלי לחץ. מה קורה איתך היום?",
-      time: new Date()
+      time: null
     }
   ]);
   const [input, setInput] = useState('');
@@ -31,30 +34,41 @@ const BigSisHome = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = (text = input) => {
+  const handleSend = async (text = input) => {
     if (!text.trim()) return;
     
+    const newId = messageId;
     const userMessage = {
-      id: Date.now(),
+      id: newId,
       sender: 'user',
       text: text.trim(),
-      time: new Date()
+      time: null
     };
     
     setMessages(prev => [...prev, userMessage]);
+    setMessageId(prev => prev + 2);
     setInput('');
     setIsTyping(true);
 
-    // Simulate response
-    setTimeout(() => {
+    try {
+      const response = await sendUserInput(text.trim());
       setIsTyping(false);
       setMessages(prev => [...prev, {
-        id: Date.now() + 1,
+        id: newId + 1,
         sender: 'bigsis',
-        text: "תודה ששיתפת אותי 💜 אני שומעת אותך. ספר/י לי עוד...",
-        time: new Date()
+        text: response.data.response,
+        time: null
       }]);
-    }, 1500);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setIsTyping(false);
+      setMessages(prev => [...prev, {
+        id: newId + 1,
+        sender: 'bigsis',
+        text: 'סליחה, קרתה שגיאה. אנא נסי שוב מאוחר יותר.',
+        time: null
+      }]);
+    }
   };
 
   const handleQuickTopic = (message) => {
@@ -70,14 +84,14 @@ const BigSisHome = () => {
 
       {/* Navigation */}
       <nav style={styles.nav}>
-        <div style={styles.logo}>
+        <Link to="/" style={styles.logo}>
           <span style={styles.logoIcon}>💜</span>
           <span style={styles.logoText}>Big Sis</span>
-        </div>
+        </Link>
         <div style={styles.navLinks}>
-          <a href="#" style={styles.navLinkActive}>Big Sis</a>
-          <a href="#" style={styles.navLink}>תוכן</a>
-          <a href="#" style={styles.navLink}>אודות</a>
+          <Link to="/chat" style={styles.navLinkActive}>Big Sis</Link>
+          <Link to="/content" style={styles.navLink}>תוכן</Link>
+          <Link to="/about" style={styles.navLink}>אודות</Link>
         </div>
         <div style={styles.navActions}>
           <button style={styles.langBtn}>🌐 עברית</button>
@@ -182,6 +196,7 @@ const BigSisHome = () => {
                   dir="rtl"
                 />
                 <button
+                  type="button"
                   onClick={() => handleSend()}
                   style={styles.sendBtn}
                   disabled={!input.trim()}
@@ -211,7 +226,7 @@ const BigSisHome = () => {
           <div style={styles.safetyIcon}>🛡️</div>
           <p style={styles.safetyText}>
             <strong>במצב חירום?</strong> אם את/ה במצוקה או מחשבות על פגיעה עצמית, 
-            פנה/י לער"ן - קו הסיוע הארצי: <a href="tel:1201" style={styles.safetyLink}>1201</a>
+            פנה/י לער&quot;ן - קו הסיוע הארצי: <a href="tel:1201" style={styles.safetyLink}>1201</a>
           </p>
         </div>
       </main>
