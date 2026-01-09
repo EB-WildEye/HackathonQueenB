@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router';
 import sendUserInput from '../../services/chatService.js';
-import Chat from "../../components/Chat/Chat.jsx";
 // Warm, supportive chat interface for "Big Sis" - a safe space to talk
 // Aesthetic: Soft, nurturing, approachable with gentle gradients and rounded shapes
 
