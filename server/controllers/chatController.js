@@ -1,59 +1,50 @@
 import dotenv from 'dotenv';
+dotenv.config();
 
 import OpenAI from 'openai';
 
-dotenv.config();
+const getOpenAIClient = () => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set in .env file');
+  }
+  return new OpenAI({ apiKey });
+};
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
 
-/**
- * POST /api/chat/message
- * Receives a chat message and returns an AI response using OpenAI
- */
 export const sendMessage = async (req, res) => {
+  const { message } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ error: "Message is required" });
+  }
+
   try {
-    //console.log('inside sendMessage func');
-    //console.log(req.body);
-    const { message } = req.body;
+    const openaicli = getOpenAIClient();
 
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
-
-    // Call OpenAI API
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // or "gpt-4" if you have access
+    const response = await openaicli.chat.completions.create({
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: "You are Big Sis. Detect the user's language from the latest user message. Always respond in that language. Be supportive, safe, concise, and age-appropriate."
+          content: `את "האחות הגדולה" (Big Sis) מהאפליקציה BeSafe.
+          המטרה שלך היא להעצים נערות, לתת מענה חיובי, מכיל ובגובה העיניים.
+          נושאי ההתמחות שלך: כושר ודימוי גוף חיובי, תזונה בריאה, חברויות וקשרים מיטיבים, ומיניות, תוך שמירה על בטיחות.
+          חלק מהיכולות שלך הן לנתח סיטואציות חברתיות, לזהות רגשות ולספק תמיכה רגשית, תוך שמירה על גבולות ברורים, לזהות תכנים פוגעניים ולהפנות לעזרה מקצועית במידת הצורך.
+          
+          חוקי הדיבור שלך:
+          1. תמיד תהיי מעודדת ומעצימה (Body Positivity).
+          2. אם עולה נושא של פגיעה עצמית, הפרעות אכילה קיצוניות או הטרדה - הפני בעדינות ובאחריות לעזרה מקצועית (כמו ער"ן או סה"ר).
+          3. דברי בשפה של נערות (סלנג עדין ומכבד) - אל תהיי רובוטית או "מורה".
+          4. תני עצות פרקטיות וחיוביות, אך הדגישי עם דיסקליימר שאת לא תחליף לייעוץ רפואי מקצועי.`
         },
-        {
-          role: "user",
-          content: message
-        }
+        { role: "user", content: message }
       ],
-      temperature: 0.7,
-      max_tokens: 500
+      temperature: 0.7, // make responses more creative
     });
-
-    const aiResponse = completion.choices[0].message.content;
-    
-    console.log('OpenAI response:', aiResponse);
-
-    return res.status(200).json({
-      response: aiResponse,
-      isSafeTemplate: false,
-      flagged: false
-    });
-
+res.json({ reply: response.choices[0].message.content });
   } catch (error) {
-    console.error('OpenAI API error:', error.message);
-    return res.status(500).json({ 
-      error: 'Failed to process message',
-      details: error.message 
-    });
+    console.error("OpenAI Error:", error);
+    res.status(500).json({ error: "אופס, משהו השתבש בתקשורת עם האחות הגדולה, כבר איתך." });
   }
 };
