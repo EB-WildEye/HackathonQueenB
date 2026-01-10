@@ -4,53 +4,83 @@ import sendUserInput from "../../services/chatService";
 
 export default function Chat() {
   const [input, setInput] = useState("");
-  const [answer, setAnswer] = useState("The answer will be here 💬");
+  const [messages, setMessages] = useState([
+    {
+      role: "ai",
+      text: "היי! 💜 אני כאן בשבילך.\nאפשר לדבר על כל מה שעל הלב - בלי שיפוטיות.. בנחת.\nמה קורה איתך היום?"
+    }
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSend() {
-  
-  //delete empyt spacse in the beginning and end; if empty, return
-  if (!input.trim()) return; 
+    const trimmed = input.trim();
+    if (!trimmed || isLoading) return;
 
-  //Todo: insert the input question in another area, like in ChatGPT
-  
-  const res = await sendUserInput(input);
-  setAnswer(res.data.response);
+    const userMsg = { role: "user", text: trimmed };
+    setMessages(prev => [...prev, userMsg]);
 
-  //clear input area
-  setInput("");  
+    setInput("");
+    setIsLoading(true);
 
+    try {
+      const data = await sendUserInput(trimmed);
+      console.log("API payload:", data);  // just to verify response structure
+      const aiText =
+        data?.reply ??
+        data?.response ?? /* fallback if backend returns "response" */
+        "";
+
+      setMessages(prev => [
+        ...prev,
+        { role: "ai", text: aiText || "לא הצלחתי לענות כרגע 😕 נסי שוב רגע 💜" }
+      ]);
+    } catch (err) {
+      console.error("Chat Error:", err);
+      setMessages(prev => [
+        ...prev,
+        { role: "ai", text: "אופס, משהו השתבש... נסי שוב" }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <div className={styles.container}>
-       
-      {/* answer area*/}
       <div className={styles.answerArea}>
-        {answer}
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={msg.role === "user" ? styles.userBubble : styles.aiBubble}
+          >
+            {msg.text}
+          </div>
+        ))}
+        {isLoading && <div className={styles.loading}>Big Sis is writing... ✍️</div>}
       </div>
 
-      {/* input area*/}
       <div className={styles.inputArea}>
-         <textarea
+        <textarea
           className={styles.inputTextArea}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Write something"
+          placeholder="כתבי כאן..."
+          disabled={isLoading}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
         />
-        <button 
+        <button
           className={styles.button}
-          onClick={handleSend}>
-          Send
+          onClick={handleSend}
+          disabled={isLoading || !input.trim()}
+        >
+          {isLoading ? "..." : "שלחי"}
         </button>
       </div>
-
     </div>
   );
 }
-
-
-
-
-  
-  
-
