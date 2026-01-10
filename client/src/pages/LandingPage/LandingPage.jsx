@@ -71,7 +71,7 @@ const BigSisLanding = () => {
         </div>
         <div style={styles.navActions}>
           <button style={styles.langBtn}>🌐 עברית</button>
-          <button style={styles.loginBtn}>התחברות</button>
+          <Link to="/login" style={styles.loginBtn}>התחברות</Link>
         </div>
       </nav>
 
