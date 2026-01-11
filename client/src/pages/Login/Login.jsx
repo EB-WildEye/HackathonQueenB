@@ -6,6 +6,8 @@ const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
+    age: '',
     password: '',
     confirmPassword: '',
   });
@@ -25,7 +27,7 @@ const Login = () => {
     
     if (isSignUp) {
       // Sign up validation
-      if (!formData.username || !formData.password || !formData.confirmPassword) {
+      if (!formData.username || !formData.email || !formData.age || !formData.password || !formData.confirmPassword) {
         setError('נא למלא את כל השדות');
         return;
       }
@@ -37,8 +39,17 @@ const Login = () => {
         setError('הסיסמה חייבת להכיל לפחות 6 תווים');
         return;
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        setError('נא להזין אימייל תקין');
+        return;
+      }
+      const ageNumber = Number(formData.age);
+      if (Number.isNaN(ageNumber) || ageNumber < 13 || ageNumber > 120) {
+        setError('נא להזין גיל בין 13 ל-120');
+        return;
+      }
       // TODO: Call signup API
-      console.log('Sign up:', formData.username, formData.password);
+      console.log('Sign up:', formData.username, formData.email, ageNumber, formData.password);
       navigate('/chat');
     } else {
       // Sign in validation
@@ -114,6 +125,38 @@ const Login = () => {
                 dir="rtl"
               />
             </div>
+
+            {isSignUp && (
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>אימייל</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="name@email.com"
+                  style={styles.input}
+                  dir="rtl"
+                />
+              </div>
+            )}
+
+            {isSignUp && (
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>גיל</label>
+                <input
+                  type="number"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleInputChange}
+                  placeholder="גילך"
+                  min="13"
+                  max="120"
+                  style={styles.input}
+                  dir="rtl"
+                />
+              </div>
+            )}
 
             <div style={styles.inputGroup}>
               <label style={styles.label}>סיסמה</label>
@@ -196,7 +239,7 @@ const Login = () => {
               type="button"
               onClick={() => {
                 setIsSignUp(!isSignUp);
-                setFormData({ username: '', password: '', confirmPassword: '' });
+                setFormData({ username: '', email: '', age: '', password: '', confirmPassword: '' });
                 setError('');
               }}
               style={styles.toggleBtn}
