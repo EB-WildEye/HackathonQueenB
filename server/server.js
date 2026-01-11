@@ -1,31 +1,25 @@
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import rubberDuckRoutes from './routes/rubberDucks.js'; // Import the routes
-import chatRoutes from './routes/chat.js';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-dotenv.config();
+dotenv.config(); // load env var
+
+import chatRoutes from './routes/chat.js';
 
 const app = express();
 
-// CORS must be configured before routes
+// CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',  // if CLIENT_URL is not set in .env, default to localhost:3000
   credentials: true
 }));
 
 app.use(express.json());
-app.use('/images', express.static(path.join(__dirname, 'images'))); // Serve static images
+app.use('/api/chat', chatRoutes);  // mount chat routes
 
-// Use the routes file for all `/ducks` routes
-app.use('/ducks', rubberDuckRoutes);
-app.use('/api/chat', chatRoutes); 
+
 // Start server
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`BeSafe Server is running on port ${PORT}`);
 });
