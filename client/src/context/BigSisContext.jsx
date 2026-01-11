@@ -5,7 +5,7 @@ import { LANG } from "../constants/languages";
 const BigSisContext = createContext();
 
 const BigSisProvider = ({ children }) => {
-  const [language, setLanguage] = useState(LANG.EN); //defualt is Eglish
+  const [language, setLanguage] = useState(LANG.HE); // default to Hebrew for landing page copy
   const [user, setUser] = useState(null);
 
   const value = {
