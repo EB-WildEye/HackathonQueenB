@@ -131,3 +131,6 @@ dist
 .env
 CLAUDE.md
 BestPractices.md
+*.backup
+.env.backup
+.env.local.backup
