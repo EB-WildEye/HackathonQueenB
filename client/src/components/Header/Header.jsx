@@ -1,5 +1,7 @@
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useContext } from "react";
+import { BigSisContext } from "../../context/BigSisContext";
+import { LANG } from "../../constants/languages";
 import styles from "./Header.module.css";
 
 const CONTENT_ITEMS = [
@@ -13,11 +15,16 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const location = useLocation();
+  const { language, setLanguage } = useContext(BigSisContext);
 
   const isContentActive = useMemo(
     () => location.pathname.startsWith("/content"),
     [location.pathname]
   );
+
+  const toggleLanguage = () => {
+    setLanguage(language === LANG.HE ? LANG.EN : LANG.HE);
+  };
 
   useEffect(() => {
     function onDocClick(e) {
@@ -106,8 +113,8 @@ export default function Header() {
           </NavLink>
         </nav>
 
-        <button className={styles.langBtn} type="button">
-          🌐 עברית
+        <button className={styles.langBtn} type="button" onClick={toggleLanguage}>
+          🌐 {language === LANG.HE ? "עברית" : "English"}
         </button>
       </div>
     </header>

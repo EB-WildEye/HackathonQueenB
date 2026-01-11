@@ -1,63 +1,142 @@
-import { useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Link } from 'react-router';
+import { BigSisContext } from '../../context/BigSisContext';
+import { LANG } from '../../constants/languages';
 
 // Landing Page for Big Sis - Main entry point with navigation to all features
 // Aesthetic: Warm, safe, nurturing with soft gradients and friendly illustrations
 
+const copy = {
+  [LANG.HE]: {
+    direction: 'rtl',
+    langLabel: '🌐 עברית',
+    nav: { home: 'בית', chat: 'Big Sis', content: 'תוכן', about: 'אודות', login: 'התחברות' },
+    hero: {
+      titlePrefix: 'יש לך',
+      highlight: 'Big Sis',
+      titleSuffix: 'שתמיד כאן בשבילך',
+      subtitle: 'מקום בטוח לדבר על כל מה שעל הלב - על מערכות יחסים, גוף, רגשות, ושאלות שקשה לשאול. בלי שיפוטיות, בלי לחץ, בקצב שלך.',
+      primaryCta: 'בואי נדבר',
+      secondaryCta: 'מה זה Big Sis?',
+      trust: ['🔒 פרטי ואנונימי', '💜 בלי שיפוטיות', '🕐 24/7 זמין']
+    },
+    features: [
+      { id: 'chat', icon: '💬', title: 'לדבר עם Big Sis', description: 'מקום בטוח לשתף, לשאול ולקבל תמיכה - בלי שיפוטיות', color: 'linear-gradient(135deg, #a855f7, #ec4899)', link: '/chat', primary: true },
+      { id: 'content', icon: '📚', title: 'תוכן ומידע', description: 'מאמרים, סרטונים וטיפים בנושאים שחשובים לך', color: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', link: '/content' },
+      { id: 'resources', icon: '🆘', title: 'עזרה ומשאבים', description: 'קווי סיוע, ארגונים ומקומות שיכולים לעזור', color: 'linear-gradient(135deg, #10b981, #14b8a6)', link: '/resources' },
+      { id: 'community', icon: '🤝', title: 'קהילה', description: 'סיפורים מעוררי השראה מאחרים שעברו דברים דומים', color: 'linear-gradient(135deg, #f59e0b, #ef4444)', link: '/community' }
+    ],
+    sections: {
+      featuresTitle: 'מה תמצאי כאן?',
+      previewTitleParts: ['שיחה', 'בטוחה ותומכת'],
+      previewDesc: 'Big Sis היא AI שאומן במיוחד להקשיב, לתמוך ולעזור - בלי לשפוט ובלי לספר לאף אחד. היא יודעת לזהות כשמשהו לא בסדר ולהפנות אותך לעזרה אמיתית כשצריך.',
+      previewBullets: [
+        'מערכת בטיחות מובנית לזיהוי מצוקה',
+        'תשובות מותאמות אישית ורגישות',
+        'הפניה למשאבים ועזרה מקצועית'
+      ],
+      chatHeaderStatus: 'מקשיבה עכשיו',
+      chatMessages: [
+        'היי! 💜 טוב שבאת. אני כאן להקשיב - מה קורה איתך?',
+        'יש לי שאלה שמביכה אותי לשאול...',
+        'אין פה מקום למבוכה, באמת 😊 כל שאלה לגיטימית. אני כאן בשבילך.'
+      ],
+      chatPlaceholder: 'כתבי משהו...',
+      testimonialsTitle: 'מה אומרים עלינו',
+      testimonials: [
+        { text: 'הרגשתי שסוף סוף מישהו מקשיב לי בלי לשפוט', emoji: '💜' },
+        { text: 'עזר לי להבין שאני לא לבד', emoji: '🌟' },
+        { text: 'המקום הכי בטוח שמצאתי לדבר', emoji: '🏠' }
+      ],
+      safetyTitle: 'במצב חירום?',
+      safetyText: 'אם את/ה במצוקה או מחשבות על פגיעה עצמית, אנחנו כאן - אבל גם חשוב לדבר עם מישהו אמיתי.',
+      emergencyLabel: 'ער"ן - 1201',
+      footerLinks: ['אודות', 'פרטיות', 'תנאי שימוש', 'צור קשר'],
+      footerNote: '💜 נבנה באהבה כדי לעזור'
+    }
+  },
+  [LANG.EN]: {
+    direction: 'ltr',
+    langLabel: '🌐 English',
+    nav: { home: 'Home', chat: 'Big Sis', content: 'Content', about: 'About', login: 'Login' },
+    hero: {
+      titlePrefix: 'You have a',
+      highlight: 'Big Sis',
+      titleSuffix: "who's always here for you",
+      subtitle: "A safe place to talk about what's on your heart—relationships, body, feelings, and the hard questions. No judgment, no pressure, at your pace.",
+      primaryCta: "Let's talk",
+      secondaryCta: 'What is Big Sis?',
+      trust: ['🔒 Private & anonymous', '💜 No judgment', '🕐 Available 24/7']
+    },
+    features: [
+      { id: 'chat', icon: '💬', title: 'Talk with Big Sis', description: 'A safe place to share, ask, and get support—without judgment', color: 'linear-gradient(135deg, #a855f7, #ec4899)', link: '/chat', primary: true },
+      { id: 'content', icon: '📚', title: 'Content & Guides', description: 'Articles, videos, and tips on what matters to you', color: 'linear-gradient(135deg, #3b82f6, #8b5cf6)', link: '/content' },
+      { id: 'resources', icon: '🆘', title: 'Help & Resources', description: 'Hotlines, organizations, and places that can support you', color: 'linear-gradient(135deg, #10b981, #14b8a6)', link: '/resources' },
+      { id: 'community', icon: '🤝', title: 'Community', description: 'Inspiring stories from others who went through similar things', color: 'linear-gradient(135deg, #f59e0b, #ef4444)', link: '/community' }
+    ],
+    sections: {
+      featuresTitle: 'What will you find here?',
+      previewTitleParts: ['Safe,', 'supportive conversation'],
+      previewDesc: 'Big Sis is an AI trained to listen, support, and help—without judging or telling anyone. She can notice when something feels off and guide you to real help when needed.',
+      previewBullets: [
+        'Built-in safety system to spot distress',
+        'Personalized, sensitive answers',
+        'Guidance to professional help when needed'
+      ],
+      chatHeaderStatus: 'Listening now',
+      chatMessages: [
+        "Hey! 💜 glad you're here. I'm listening—what's going on?",
+        "I have a question I'm embarrassed to ask...",
+        "No need to feel embarrassed 😊 every question is valid. I'm here for you."
+      ],
+      chatPlaceholder: 'Type something...',
+      testimonialsTitle: 'What people say',
+      testimonials: [
+        { text: 'I felt someone finally listened without judging', emoji: '💜' },
+        { text: "Helped me realize I'm not alone", emoji: '🌟' },
+        { text: 'The safest place I found to talk', emoji: '🏠' }
+      ],
+      safetyTitle: 'In an emergency?',
+      safetyText: "If you're in distress or having thoughts of self-harm, we're here — but it's also important to talk to a real person.",
+      emergencyLabel: 'ERAN - 1201',
+      footerLinks: ['About', 'Privacy', 'Terms', 'Contact'],
+      footerNote: '💜 Built with love to help'
+    }
+  }
+};
+
 const BigSisLanding = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
+  const { language, setLanguage } = useContext(BigSisContext);
 
-  const features = [
-    {
-      id: 'chat',
-      icon: '💬',
-      title: 'לדבר עם Big Sis',
-      description: 'מקום בטוח לשתף, לשאול ולקבל תמיכה - בלי שיפוטיות',
-      color: 'linear-gradient(135deg, #a855f7, #ec4899)',
-      link: '/chat',
-      primary: true,
-    },
-    {
-      id: 'content',
-      icon: '📚',
-      title: 'תוכן ומידע',
-      description: 'מאמרים, סרטונים וטיפים בנושאים שחשובים לך',
-      color: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-      link: '/content',
-    },
-    {
-      id: 'resources',
-      icon: '🆘',
-      title: 'עזרה ומשאבים',
-      description: 'קווי סיוע, ארגונים ומקומות שיכולים לעזור',
-      color: 'linear-gradient(135deg, #10b981, #14b8a6)',
-      link: '/resources',
-    },
-    {
-      id: 'community',
-      icon: '🤝',
-      title: 'קהילה',
-      description: 'סיפורים מעוררי השראה מאחרים שעברו דברים דומים',
-      color: 'linear-gradient(135deg, #f59e0b, #ef4444)',
-      link: '/community',
-    },
-  ];
-
-  const testimonials = [
-    { text: 'הרגשתי שסוף סוף מישהו מקשיב לי בלי לשפוט', emoji: '💜' },
-    { text: 'עזר לי להבין שאני לא לבד', emoji: '🌟' },
-    { text: 'המקום הכי בטוח שמצאתי לדבר', emoji: '🏠' },
-  ];
+  const activeCopy = useMemo(() => copy[language] || copy[LANG.HE], [language]);
+  const handleToggleLanguage = () => setLanguage(language === LANG.HE ? LANG.EN : LANG.HE);
 
   return (
-    <div style={styles.container}>
+    <div dir={activeCopy.direction} style={{ ...styles.container, direction: activeCopy.direction }}>
       {/* Background decorations */}
       <div style={styles.bgOrb1}></div>
       <div style={styles.bgOrb2}></div>
       <div style={styles.bgOrb3}></div>
       <div style={styles.bgPattern}></div>
 
-      
+      {/* Navigation */}
+      <nav style={styles.nav}>
+        <Link to="/" style={styles.logo}>
+          <span style={styles.logoEmoji}>💜</span>
+          <span style={styles.logoText}>Big Sis</span>
+        </Link>
+        <div style={styles.navLinks}>
+          <Link to="/" style={styles.navLinkActive}>{activeCopy.nav.home}</Link>
+          <Link to="/chat" style={styles.navLink}>{activeCopy.nav.chat}</Link>
+          <Link to="/content" style={styles.navLink}>{activeCopy.nav.content}</Link>
+          <Link to="/about" style={styles.navLink}>{activeCopy.nav.about}</Link>
+        </div>
+        <div style={styles.navActions}>
+          <button style={styles.langBtn} onClick={handleToggleLanguage}>{activeCopy.langLabel}</button>
+          <Link to="/login" style={styles.loginBtn}>{activeCopy.nav.login}</Link>
+        </div>
+      </nav>
 
       {/* Hero Section */}
       <header style={styles.hero}>
@@ -68,42 +147,41 @@ const BigSisLanding = () => {
             <span style={styles.heartFloat2}>💗</span>
             <span style={styles.heartFloat3}>✨</span>
           </div>
-          
+
           <h1 style={styles.heroTitle}>
-          <span style={styles.highlight}>Big Sis</span>
-            <br />שתמיד כאן בשבילך
+            {activeCopy.hero.titlePrefix} <span style={styles.highlight}>{activeCopy.hero.highlight}</span>
+            <br />{activeCopy.hero.titleSuffix}
           </h1>
-          
+
           <p style={styles.heroSubtitle}>
-            מקום בטוח לדבר על כל מה שעל הלב - על מערכות יחסים, גוף, רגשות, 
-            ושאלות שקשה לשאול. בלי שיפוטיות, בלי לחץ, בקצב שלך.
+            {activeCopy.hero.subtitle}
           </p>
 
           <div style={styles.heroCta}>
             <Link to="/chat" style={styles.primaryBtn}>
               <span>💬</span>
-              <span>בואי נדבר</span>
+              <span>{activeCopy.hero.primaryCta}</span>
             </Link>
             <Link to="/about" style={styles.secondaryBtn}>
-              <span>מה זה Big Sis?</span>
+              <span>{activeCopy.hero.secondaryCta}</span>
               <span>→</span>
             </Link>
           </div>
-{/* 
+
           <div style={styles.trustBadges}>
-            <div style={styles.badge}>🔒 פרטי ואנונימי</div>
-            <div style={styles.badge}>💜 בלי שיפוטיות</div>
-            <div style={styles.badge}>🕐 24/7 זמין</div>
-          </div> */}
+            {activeCopy.hero.trust.map((item, idx) => (
+              <div key={idx} style={styles.badge}>{item}</div>
+            ))}
+          </div>
         </div>
       </header>
 
       {/* Features Grid */}
-      {/* <section style={styles.features}>
-        <h2 style={styles.sectionTitle}>מה תמצאי כאן?</h2>
-        
+      <section style={styles.features}>
+        <h2 style={styles.sectionTitle}>{activeCopy.sections.featuresTitle}</h2>
+
         <div style={styles.featuresGrid}>
-          {features.map((feature) => (
+          {activeCopy.features.map((feature) => (
             <Link
               key={feature.id}
               to={feature.link}
@@ -111,14 +189,14 @@ const BigSisLanding = () => {
                 ...styles.featureCard,
                 ...(feature.primary ? styles.primaryCard : {}),
                 transform: hoveredCard === feature.id ? 'translateY(-8px) scale(1.02)' : 'translateY(0)',
-                boxShadow: hoveredCard === feature.id 
-                  ? '0 25px 50px rgba(168, 85, 247, 0.25)' 
+                boxShadow: hoveredCard === feature.id
+                  ? '0 25px 50px rgba(168, 85, 247, 0.25)'
                   : '0 10px 40px rgba(0, 0, 0, 0.08)',
               }}
               onMouseEnter={() => setHoveredCard(feature.id)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <div 
+              <div
                 style={{
                   ...styles.featureIcon,
                   background: feature.color,
@@ -139,33 +217,31 @@ const BigSisLanding = () => {
       </section>
 
       {/* Quick Chat Preview */}
-      {/* <section style={styles.preview}>
+      <section style={styles.preview}>
         <div style={styles.previewContent}>
           <div style={styles.previewText}>
             <h2 style={styles.previewTitle}>
-              שיחה <span style={styles.highlight}>בטוחה</span> ותומכת
+              {activeCopy.sections.previewTitleParts ? (
+                <>
+                  {activeCopy.sections.previewTitleParts[0]}{' '}
+                  <span style={styles.highlight}>{activeCopy.sections.previewTitleParts[1]}</span>
+                  {activeCopy.sections.previewTitleParts[2] ? ` ${activeCopy.sections.previewTitleParts[2]}` : ''}
+                </>
+              ) : null}
             </h2>
             <p style={styles.previewDesc}>
-              Big Sis היא AI שאומן במיוחד להקשיב, לתמוך ולעזור - 
-              בלי לשפוט ובלי לספר לאף אחד. היא יודעת לזהות כשמשהו לא בסדר 
-              ולהפנות אותך לעזרה אמיתית כשצריך.
+              {activeCopy.sections.previewDesc}
             </p>
             <ul style={styles.previewList}>
-              <li style={styles.previewItem}>
-                <span style={styles.checkIcon}>✓</span>
-                מערכת בטיחות מובנית לזיהוי מצוקה
-              </li>
-              <li style={styles.previewItem}>
-                <span style={styles.checkIcon}>✓</span>
-                תשובות מותאמות אישית ורגישות
-              </li>
-              <li style={styles.previewItem}>
-                <span style={styles.checkIcon}>✓</span>
-                הפניה למשאבים ועזרה מקצועית
-              </li>
+              {activeCopy.sections.previewBullets.map((item, idx) => (
+                <li key={idx} style={styles.previewItem}>
+                  <span style={styles.checkIcon}>✓</span>
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
-          
+
           <div style={styles.previewChat}>
             <div style={styles.chatWindow}>
               <div style={styles.chatHeader}>
@@ -174,55 +250,55 @@ const BigSisLanding = () => {
                   <div style={styles.chatName}>Big Sis</div>
                   <div style={styles.chatStatus}>
                     <span style={styles.onlineDot}></span>
-                    מקשיבה עכשיו
+                    {activeCopy.sections.chatHeaderStatus}
                   </div>
                 </div>
               </div>
               <div style={styles.chatMessages}>
                 <div style={styles.sisMessage}>
-                  היי! 💜 טוב שבאת. אני כאן להקשיב - מה קורה איתך?
+                  {activeCopy.sections.chatMessages[0]}
                 </div>
                 <div style={styles.userMessage}>
-                  יש לי שאלה שמביכה אותי לשאול...
+                  {activeCopy.sections.chatMessages[1]}
                 </div>
                 <div style={styles.sisMessage}>
-                  אין פה מקום למבוכה, באמת 😊 כל שאלה לגיטימית. אני כאן בשבילך.
+                  {activeCopy.sections.chatMessages[2]}
                 </div>
               </div>
               <div style={styles.chatInput}>
-                <span style={styles.chatPlaceholder}>כתבי משהו...</span>
+                <span style={styles.chatPlaceholder}>{activeCopy.sections.chatPlaceholder}</span>
               </div>
             </div>
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* Testimonials */}
-      {/* <section style={styles.testimonials}>
-        <h2 style={styles.sectionTitle}>מה אומרים עלינו</h2>
+      <section style={styles.testimonials}>
+        <h2 style={styles.sectionTitle}>{activeCopy.sections.testimonialsTitle}</h2>
         <div style={styles.testimonialGrid}>
-          {testimonials.map((item, index) => (
+          {activeCopy.sections.testimonials.map((item, index) => (
             <div key={index} style={styles.testimonialCard}>
               <span style={styles.testimonialEmoji}>{item.emoji}</span>
               <p style={styles.testimonialText}>&ldquo;{item.text}&rdquo;</p>
             </div>
           ))}
         </div>
-      </section> */} 
+      </section>
 
       {/* Safety Banner */}
       <section style={styles.safetyBanner}>
         <div style={styles.safetyContent}>
           <div style={styles.safetyIcon}>🛡️</div>
           <div>
-            <h3 style={styles.safetyTitle}>במצב חירום?</h3>
+            <h3 style={styles.safetyTitle}>{activeCopy.sections.safetyTitle}</h3>
             <p style={styles.safetyText}>
-              אם את/ה במצוקה או מחשבות על פגיעה עצמית, אנחנו כאן - אבל גם חשוב לדבר עם מישהו אמיתי.
+              {activeCopy.sections.safetyText}
             </p>
           </div>
           <a href="tel:1201" style={styles.emergencyBtn}>
             <span>📞</span>
-            <span>ער&quot;ן - 1201</span>
+            <span>{activeCopy.sections.emergencyLabel}</span>
           </a>
         </div>
       </section>
@@ -235,31 +311,31 @@ const BigSisLanding = () => {
             <span style={styles.logoText}>Big Sis</span>
           </Link>
           <div style={styles.footerLinks}>
-            <Link to="/about" style={styles.footerLink}>אודות</Link>
-            <Link to="/privacy" style={styles.footerLink}>פרטיות</Link>
-            <Link to="/terms" style={styles.footerLink}>תנאי שימוש</Link>
-            <Link to="/contact" style={styles.footerLink}>צור קשר</Link>
+            <Link to="/about" style={styles.footerLink}>{activeCopy.sections.footerLinks[0]}</Link>
+            <Link to="/privacy" style={styles.footerLink}>{activeCopy.sections.footerLinks[1]}</Link>
+            <Link to="/terms" style={styles.footerLink}>{activeCopy.sections.footerLinks[2]}</Link>
+            <Link to="/contact" style={styles.footerLink}>{activeCopy.sections.footerLinks[3]}</Link>
           </div>
           <p style={styles.footerNote}>
-            💜 נבנה באהבה כדי לעזור
+            {activeCopy.sections.footerNote}
           </p>
         </div>
       </footer>
 
-      {/* Global Styles */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
-        
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
-        
-        body {
-          font-family: 'Heebo', sans-serif;
-          direction: rtl;
-        }
+        {/* Global Styles */}
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
+
+          * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
+
+          body {
+            font-family: 'Heebo', sans-serif;
+            direction: ${activeCopy.direction};
+          }
         
         a {
           text-decoration: none;
@@ -821,7 +897,7 @@ const styles = {
     fontWeight: '600',
     whiteSpace: 'nowrap',
     boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)',
-    marginRight: 'auto',
+    marginInlineStart: 'auto',
   },
 
   // Footer
