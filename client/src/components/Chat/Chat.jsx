@@ -7,7 +7,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      text: "היי! 💜 אני כאן בשבילך.\nאפשר לדבר על כל מה שעל הלב - בלי שיפוטיות.. בנחת.\nמה קורה איתך היום?"
+      text: "היי! 💜 אני כאן בשבילך. אפשר לדבר על כל מה שעל הלב - בלי שיפוטיות.. בנחת. מה קורה איתך היום?"
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
