@@ -1,0 +1,16 @@
+{
+  "name": "hackathon-queenb",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && node -r dotenv/config ../node_modules/.bin/nodemon server.js dotenv_config_path=../.env",
+    "client": "cd client && node -r dotenv/config ../node_modules/.bin/vite dotenv_config_path=../.env",
+    "install-all": "npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
