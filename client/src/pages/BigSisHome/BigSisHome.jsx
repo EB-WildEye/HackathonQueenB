@@ -1,18 +1,49 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import sendUserInput from "../../services/chatService.js";
 import { QUICK_TOPICS } from "../../config/quickTopics.js";
+import { BigSisContext } from "../../context/BigSisContext";
+import { LANG } from "../../constants/languages";
 import styles from "./BigSisHome.module.css";
 
 console.log("BigSisHome styles keys:", Object.keys(styles));
 
+const TRANSLATIONS = {
+  he: {
+    initialMessage: "היי! 💜 אני כאן בשבילך. אפשר לדבר על כל מה שעל הלב - בלי שיפוטיות, בלי לחץ. מה קורה איתך היום?",
+    heroSubtitle: "מקום בטוח לדבר על כל מה שעל הלב. אני כאן להקשיב, לתמוך ולעזור - בלי שיפוטיות.",
+    quickTopicsLabel: "או בחרי נושא:",
+    inputPlaceholder: "כתוב/י משהו...",
+    disclaimer: "🔒 השיחה שלך פרטית ובטוחה",
+    safetyNote: "במצב חירום ?  ",
+    safetyNoteText: "אם את במצוקה או מחשבות על פגיעה עצמית, פני לער\"ן - קו הסיוע הארצי: ",
+    errorMessage: "לא הצלחתי לענות כרגע 😕 נסי שוב רגע 💜",
+    errorRetry: "סליחה, קרתה שגיאה. אנא נסי שוב מאוחר יותר.",
+  },
+  en: {
+    initialMessage: "Hey! 💜 I'm here for you. You can talk about anything on your mind - no judgment, no pressure. What's going on with you today?",
+    heroSubtitle: "A safe place to talk about everything on your mind. I'm here to listen, support, and help - without judgment.",
+    quickTopicsLabel: "Or choose a topic:",
+    inputPlaceholder: "Type something...",
+    disclaimer: "🔒 Your conversation is private and secure",
+    safetyNote: "In an emergency? ",
+    safetyNoteText: "If you're in distress or thinking about self-harm, reach out to the national crisis hotline: ",
+    errorMessage: "I couldn't answer right now 😕 Please try again in a moment 💜",
+    errorRetry: "Sorry, an error occurred. Please try again later.",
+  }
+};
+
 const BigSisHome = () => {
+  const { language } = useContext(BigSisContext);
+  const lang = language === LANG.EN ? 'en' : 'he';
+  const t = TRANSLATIONS[lang];
+  const quickTopics = QUICK_TOPICS[lang];
+
   const [messageId, setMessageId] = useState(2);
-  const [messages, setMessages] = useState([
+  const [rawMessages, setRawMessages] = useState(() => [
     {
       id: 1,
       sender: "bigsis",
-      text:
-        "היי! 💜 אני כאן בשבילך. \\nאפשר לדבר על כל מה שעל הלב - בלי שיפוטיות, בלי לחץ. מה קורה איתך היום?",
+      isInitial: true,
       time: null,
     },
   ]);
@@ -20,6 +51,14 @@ const BigSisHome = () => {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Derive messages with current language translations
+  const messages = rawMessages.map((msg) => {
+    if (msg.isInitial) {
+      return { ...msg, text: t.initialMessage };
+    }
+    return msg;
+  });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -31,7 +70,7 @@ const BigSisHome = () => {
 
     const newId = messageId;
 
-    setMessages((prev) => [
+    setRawMessages((prev) => [
       ...prev,
       { id: newId, sender: "user", text: trimmed, time: null },
     ]);
@@ -45,24 +84,24 @@ const BigSisHome = () => {
       const aiText = data?.reply ?? data?.response ?? "";
 
       setIsTyping(false);
-      setMessages((prev) => [
+      setRawMessages((prev) => [
         ...prev,
         {
           id: newId + 1,
           sender: "bigsis",
-          text: aiText || "לא הצלחתי לענות כרגע 😕 נסי שוב רגע 💜",
+          text: aiText || t.errorMessage,
           time: null,
         },
       ]);
     } catch (error) {
       console.error("Error sending message:", error);
       setIsTyping(false);
-      setMessages((prev) => [
+      setRawMessages((prev) => [
         ...prev,
         {
           id: newId + 1,
           sender: "bigsis",
-          text: "סליחה, קרתה שגיאה. אנא נסי שוב מאוחר יותר.",
+          text: t.errorRetry,
           time: null,
         },
       ]);
@@ -91,7 +130,7 @@ const BigSisHome = () => {
 
           <h1 className={styles.heroTitle}>Big Sis</h1>
           <p className={styles.heroSubtitle}>
-            מקום בטוח לדבר על כל מה שעל הלב. אני כאן להקשיב, לתמוך ולעזור - בלי שיפוטיות.
+            {t.heroSubtitle}
           </p>
         </div>
 
@@ -140,10 +179,10 @@ const BigSisHome = () => {
             {/* Quick Topics */}
             {messages.length <= 1 && (
               <div className={styles.quickTopics}>
-                <p className={styles.quickTopicsLabel}>או בחרי נושא:</p>
+                <p className={styles.quickTopicsLabel}>{t.quickTopicsLabel}</p>
 
                 <div className={styles.quickTopicsGrid}>
-                  {QUICK_TOPICS.map((topic, index) => (
+                  {quickTopics.map((topic, index) => (
                     <button
                       key={index}
                       className={styles.quickTopicBtn}
@@ -165,9 +204,9 @@ const BigSisHome = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="כתוב/י משהו..."
+                  placeholder={t.inputPlaceholder}
                   className={styles.input}
-                  dir="rtl"
+                  dir={lang === 'he' ? 'rtl' : 'ltr'}
                 />
 
                 <button
@@ -189,7 +228,7 @@ const BigSisHome = () => {
                 </button>
               </div>
 
-              <p className={styles.disclaimer}>🔒 השיחה שלך פרטית ובטוחה</p>
+              <p className={styles.disclaimer}>{t.disclaimer}</p>
             </div>
           </div>
         </div>
@@ -198,8 +237,7 @@ const BigSisHome = () => {
         <div className={styles.safetyNote}>
           <div className={styles.safetyIcon}>🛡️</div>
           <p className={styles.safetyText}>
-            <strong>במצב חירום ?  </strong> אם את במצוקה או מחשבות על פגיעה עצמית, פני
-            לער&quot;ן - קו הסיוע הארצי:{" "}
+            <strong>{t.safetyNote}</strong> {t.safetyNoteText}
             <a href="tel:1201" className={styles.safetyLink}>
               1201
             </a>
