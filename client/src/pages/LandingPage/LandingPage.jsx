@@ -57,23 +57,7 @@ const BigSisLanding = () => {
       <div style={styles.bgOrb3}></div>
       <div style={styles.bgPattern}></div>
 
-      {/* Navigation */}
-      <nav style={styles.nav}>
-        <Link to="/" style={styles.logo}>
-          <span style={styles.logoIcon}>💜</span>
-          <span style={styles.logoText}>Big Sis</span>
-        </Link>
-        <div style={styles.navLinks}>
-          <Link to="/" style={styles.navLinkActive}>בית</Link>
-          <Link to="/chat" style={styles.navLink}>Big Sis</Link>
-          <Link to="/content" style={styles.navLink}>תוכן</Link>
-          <Link to="/about" style={styles.navLink}>אודות</Link>
-        </div>
-        <div style={styles.navActions}>
-          <button style={styles.langBtn}>🌐 עברית</button>
-          <button style={styles.loginBtn}>התחברות</button>
-        </div>
-      </nav>
+      
 
       {/* Hero Section */}
       <header style={styles.hero}>
@@ -86,7 +70,7 @@ const BigSisLanding = () => {
           </div>
           
           <h1 style={styles.heroTitle}>
-            יש לך <span style={styles.highlight}>Big Sis</span>
+          <span style={styles.highlight}>Big Sis</span>
             <br />שתמיד כאן בשבילך
           </h1>
           
@@ -105,17 +89,17 @@ const BigSisLanding = () => {
               <span>→</span>
             </Link>
           </div>
-
+{/* 
           <div style={styles.trustBadges}>
             <div style={styles.badge}>🔒 פרטי ואנונימי</div>
             <div style={styles.badge}>💜 בלי שיפוטיות</div>
             <div style={styles.badge}>🕐 24/7 זמין</div>
-          </div>
+          </div> */}
         </div>
       </header>
 
       {/* Features Grid */}
-      <section style={styles.features}>
+      {/* <section style={styles.features}>
         <h2 style={styles.sectionTitle}>מה תמצאי כאן?</h2>
         
         <div style={styles.featuresGrid}>
@@ -155,7 +139,7 @@ const BigSisLanding = () => {
       </section>
 
       {/* Quick Chat Preview */}
-      <section style={styles.preview}>
+      {/* <section style={styles.preview}>
         <div style={styles.previewContent}>
           <div style={styles.previewText}>
             <h2 style={styles.previewTitle}>
@@ -211,10 +195,10 @@ const BigSisLanding = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Testimonials */}
-      <section style={styles.testimonials}>
+      {/* <section style={styles.testimonials}>
         <h2 style={styles.sectionTitle}>מה אומרים עלינו</h2>
         <div style={styles.testimonialGrid}>
           {testimonials.map((item, index) => (
@@ -224,7 +208,7 @@ const BigSisLanding = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */} 
 
       {/* Safety Banner */}
       <section style={styles.safetyBanner}>

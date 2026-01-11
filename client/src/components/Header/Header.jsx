@@ -1,21 +1,114 @@
-import { Link } from "react-router-dom";
-import "./Header.css";
+import { NavLink, Link, useLocation } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import styles from "./Header.module.css";
+
+const CONTENT_ITEMS = [
+  { to: "/content/body", label: "דימוי גוף", emoji: "💗" },
+  { to: "/content/relationships", label: "מערכות יחסים", emoji: "🤝" },
+  { to: "/content/intimacy", label: "אינטימיות", emoji: "🤍" },
+  { to: "/content/nutrition", label: "תזונה", emoji: "🥗" },
+];
 
 export default function Header() {
-  return (
-    <header className="header">
-      <div className="left">
-        <h1 className="title">Big Sis</h1>
-        <nav className="nav">
-          <Link to="/">Home</Link>
-          <Link to="/content">Content</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </div>
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+  const location = useLocation();
 
-      <div className="right">
-        <button type="button">🌍 Language</button>
-        <button type="button">Log in</button>
+  const isContentActive = useMemo(
+    () => location.pathname.startsWith("/content"),
+    [location.pathname]
+  );
+
+  useEffect(() => {
+    function onDocClick(e) {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(e.target)) setOpen(false);
+    }
+
+    function onEsc(e) {
+      if (e.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onEsc);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onEsc);
+    };
+  }, []);
+
+  return (
+    <header className={styles.header}>
+      <div className={styles.inner}>
+        <Link to="/" className={styles.brand}>
+          <span className={styles.brandIcon}>💜</span>
+          <span className={styles.brandText}>BeSafe</span>
+        </Link>
+
+        <nav className={styles.nav}>
+          <NavLink
+            to="/chat"
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.active : ""}`
+            }
+          >
+            Lets chat
+          </NavLink>
+
+          <div className={styles.dropdown} ref={menuRef}>
+            <button
+              type="button"
+              className={`${styles.navLink} ${styles.dropdownBtn} ${
+                isContentActive ? styles.active : ""
+              } ${open ? styles.dropdownOpen : ""}`}
+              onClick={() => setOpen((v) => !v)}
+              aria-haspopup="menu"
+              aria-expanded={open}
+            >
+              Content
+              <span className={styles.caret} aria-hidden="true">
+                ▾
+              </span>
+            </button>
+
+            <div
+              className={`${styles.dropdownMenu} ${
+                open ? styles.menuOpen : styles.menuClosed
+              }`}
+              role="menu"
+            >
+              {CONTENT_ITEMS.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `${styles.dropdownItem} ${isActive ? styles.dropdownItemActive : ""}`
+                  }
+                  onClick={() => setOpen(false)}
+                  role="menuitem"
+                >
+                  <span className={styles.itemEmoji}>{item.emoji}</span>
+                  <span className={styles.itemLabel}>{item.label}</span>
+                </NavLink>
+              ))}
+
+              <div className={styles.menuHint}>בקרוב עוד תכנים 💜</div>
+            </div>
+          </div>
+
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.active : ""}`
+            }
+          >
+            About us
+          </NavLink>
+        </nav>
+
+        <button className={styles.langBtn} type="button">
+          🌐 עברית
+        </button>
       </div>
     </header>
   );

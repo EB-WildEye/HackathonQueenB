@@ -1,0 +1,191 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.12);
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brandIcon {
+  font-size: 22px;
+}
+
+.brandText {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.navLink {
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 999px;
+  transition: all 0.15s ease;
+}
+
+.navLink:hover {
+  background: rgba(168, 85, 247, 0.08);
+  color: #4b5563;
+}
+
+.active {
+  background: rgba(168, 85, 247, 0.14);
+  color: #6d28d9;
+}
+
+.langBtn {
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.dropdown {
+  position: relative;
+}
+
+/* Button tweaks */
+.dropdownBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+}
+
+/* Caret animation */
+.caret {
+  display: inline-block;
+  transform: translateY(1px);
+  transition: transform 180ms ease;
+}
+
+.dropdownOpen .caret {
+  transform: translateY(1px) rotate(180deg);
+}
+
+/* Menu container with soft glass + border */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  border-radius: 16px;
+
+  box-shadow: 0 18px 45px rgba(168, 85, 247, 0.12),
+    0 6px 18px rgba(0, 0, 0, 0.08);
+
+  padding: 10px;
+  z-index: 90;
+
+  /* For animation */
+  transform-origin: top right;
+}
+
+/* Open/close animation (no layout jump) */
+.menuClosed {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.menuOpen {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+/* Items */
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+  border-radius: 14px;
+
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 800;
+  font-size: 14px;
+
+  transition: transform 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.dropdownItem:hover {
+  background: rgba(168, 85, 247, 0.10);
+  color: #6d28d9;
+  transform: translateY(-1px);
+}
+
+.dropdownItemActive {
+  background: rgba(236, 72, 153, 0.10);
+  color: #9d174d;
+}
+
+/* Emoji bubble style */
+.itemEmoji {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+
+  display: grid;
+  place-items: center;
+
+  background: linear-gradient(135deg, rgba(249, 168, 212, 0.7), rgba(192, 132, 252, 0.55));
+  border: 1px solid rgba(168, 85, 247, 0.18);
+}
+
+.itemLabel {
+  line-height: 1.2;
+}
+
+/* Small hint at bottom */
+.menuHint {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(168, 85, 247, 0.12);
+
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+}
