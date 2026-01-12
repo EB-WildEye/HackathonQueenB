@@ -142,18 +142,28 @@ const BigSisHome = () => {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
+<<<<<<< Updated upstream
                   className={`${styles.messageRow} ${
                     msg.sender === "user" ? styles.rowUser : styles.rowSis
                   }`}
+=======
+                  className={`${styles.messageRow} ${msg.sender === "user" ? styles.rowUser : styles.rowSis
+                    }`}
+>>>>>>> Stashed changes
                 >
                   {msg.sender === "bigsis" && (
                     <div className={styles.messageAvatar}>👩‍🦰</div>
                   )}
 
                   <div
+<<<<<<< Updated upstream
                     className={`${styles.messageBubble} ${
                       msg.sender === "user" ? styles.userBubble : styles.sisBubble
                     }`}
+=======
+                    className={`${styles.messageBubble} ${msg.sender === "user" ? styles.userBubble : styles.sisBubble
+                      }`}
+>>>>>>> Stashed changes
                   >
                     {msg.text}
                   </div>

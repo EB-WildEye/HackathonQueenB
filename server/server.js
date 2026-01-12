@@ -5,7 +5,11 @@ import dotenv from 'dotenv';
 dotenv.config(); // load env var
 
 import chatRoutes from './routes/chat.js';
+<<<<<<< Updated upstream
 import ragRoutes from './routes/rag.js';
+=======
+import userRoutes from './routes/user.js';
+>>>>>>> Stashed changes
 
 const app = express();
 
@@ -31,7 +35,11 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/api/chat', chatRoutes);  // mount chat routes
+<<<<<<< Updated upstream
 app.use('/api/rag', ragRoutes);    // mount RAG routes
+=======
+app.use('/api/user', userRoutes);  // mount user routes
+>>>>>>> Stashed changes
 
 
 // Start server
